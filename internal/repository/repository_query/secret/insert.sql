@@ -1,0 +1,1 @@
+INSERT INTO secret(`key`, `name`, `patronymic`, `surname`, `role`, `created_by`) VALUES(?, ?, ?, ?, ?, ?)

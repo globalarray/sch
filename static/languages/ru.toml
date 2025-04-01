@@ -1,0 +1,32 @@
+Name="Russian"
+Aliases=[]
+
+[Translations]
+Yes="Да"
+No="Нет"
+
+Student="Ученик"
+Teacher="Учитель"
+Admin="Администратор"
+
+AdminPanelTitle="<b>%s %s,</b> добро пожаловать в панель Администратора"
+
+QuizCreateBtn="Создать тест"
+QuizCreateNameLengthInvalid="Длина имени теста не соответствует ограничениям (5 <= имя_теста <= 20)."
+QuizCreatedMessage="Отлично. Тест создан.\nТеперь начнем заполнять его вопросами.\n\nНачнем с 1-го. Отправьте сначала сам вопрос."
+QuizQuestionNameLengthInvalid="Длина вопроса не соответствует норме (5 <= вопрос <= 50)."
+
+InvitationKeyRequired="Вы отсутствуете в базе данных школы.\n\nЧтобы подключиться к системе Sch, необходимо отправить invitation-ключ.\nЕсли таковой у Вас отсутствует, то обратитесь к техническому администратору."
+InvitationKeyCreateBtn="Создать invitation-key."
+InvitationKeyRemoveBtn="Аннулировать"
+InvitationKeyCreateTitle='Начинаем создавать ключ <b>%s</b>...'
+InvitationKeyCreateName="Как зовут человека, которому создается ключ? Укажите в формате Фамилия Имя Отчество (например: Минаев Давид Михайлович)."
+InvitationKeyNameIncorrect="Неверно указано ФИО. Укажите по следующей форме: Фамилия Имя Отчество."
+InvitationKeyNameSaved="Отлично. Владельца ключа зовут: <b>%s %s %s</b>. Все верно?"
+InvitationKeyNameRefillMessage="Хорошо. Отправьте новое ФИО."
+InvitationKeyStageRoleMessage="Ура! Ключ почти готов к использованию... Осталось лишь выбрать роль владельцу. По умолчанию стоит роль ученика."
+InvitationKeyCreated="Ключ создан.\n\nВладелец: %s\nРоль: %s\nИстекает: %s"
+InvitationKeyRemoved="Ключ <b>%s</b> аннулирован."
+InvitationKeyApplied="%s %s, Вы успешно зарегистрированы в должности %s."
+InvitationKeyInvalid="Данный пригласительный ключ не действителен."
+RuntimeError="Возникла непредвиденная ошибка. Повторите свой запрос чуть позже. (err: %s)"

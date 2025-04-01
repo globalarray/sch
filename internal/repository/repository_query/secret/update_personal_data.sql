@@ -1,0 +1,1 @@
+UPDATE secret SET `surname` = ?, `name` = ?, `patronymic` = ? WHERE `key` = ?;

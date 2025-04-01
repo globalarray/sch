@@ -1,0 +1,1 @@
+UPDATE secret SET `role` = ? WHERE `key` = ?;

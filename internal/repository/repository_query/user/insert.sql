@@ -1,0 +1,1 @@
+INSERT INTO users (`tg_id`, `name`, `patronymic`, `surname`, `role`) VALUES(?, ?, ?, ?, ?)

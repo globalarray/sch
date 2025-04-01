@@ -1,0 +1,1 @@
+INSERT INTO question(`quiz_id`, `question`, `answers`) VALUES (?, ?, ?);
