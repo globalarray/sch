@@ -27,6 +27,15 @@ var (
 	//go:embed quiz/insert.sql
 	InsertQuiz string
 
+	//go:embed quiz/select.sql
+	SelectQuiz string
+
 	//go:embed question/insert.sql
 	InsertQuestion string
+
+	//go:embed question/select_by_quiz_id.sql
+	SelectQuestionsByQuizID string
+
+	//go:embed question/update_answers.sql
+	UpdateQuestionAnswers string
 )

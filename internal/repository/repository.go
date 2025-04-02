@@ -150,13 +150,55 @@ func (repo *Repository) SaveNewQuiz(quiz repository_model.Quiz) (id int64, err e
 	return id, err
 }
 
-func (repo *Repository) SaveNewQuestion(question repository_model.Question) error {
+func (repo *Repository) SaveNewQuestion(question repository_model.Question) (id int64, err error) {
 	query := repository_query.InsertQuestion
 
 	args := utils.Array{
 		question.QuizID,
 		question.Question,
-		strings.Join(question.Answers, ";"),
+		question.Answers,
+	}
+
+	err = new(datasource.DataSource).ExecSQL(repo.db.Exec(query, args...)).Scan(nil, &id)
+
+	return id, err
+}
+
+func (repo *Repository) GetQuizByID(id int64) (q repository_model.Quiz, err error) {
+	query := repository_query.SelectQuiz
+
+	row := func(idx int) utils.Array {
+		return utils.Array{
+			&q.ID,
+			&q.Name,
+			&q.Creation,
+			&q.CreatedBy,
+		}
+	}
+
+	if err := new(datasource.DataSource).QuerySQL(repo.db.Queryx(query, id)).Scan(row); err != nil {
+		return q, err
+	}
+
+	return q, nil
+}
+
+func (repo *Repository) GetQuestionsByQuizID(quizID int64) (questions []repository_model.Question, err error) {
+	query := repository_query.SelectQuestionsByQuizID
+
+	if err := repo.db.Select(&questions, query, quizID); err != nil {
+		return questions, err
+	}
+
+	return questions, nil
+}
+
+func (repo *Repository) UpdateQuestionAnswers(questionID int64, answers []string) error {
+	query := repository_query.UpdateQuestionAnswers
+
+	args := utils.Array{
+		strings.Join(answers, ";"),
+		questionID,
 	}
 
 	return new(datasource.DataSource).ExecSQL(repo.db.Exec(query, args...)).Scan(nil, nil)

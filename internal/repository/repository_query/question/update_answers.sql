@@ -1,0 +1,1 @@
+UPDATE question SET `answers` = ? WHERE `id` = ?;

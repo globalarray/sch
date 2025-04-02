@@ -10,10 +10,15 @@ const (
 
 	AdminPanelTitle string = "AdminPanelTitle"
 
-	QuizCreateBtn                 string = "QuizCreateBtn"
-	QuizCreateNameLengthInvalid   string = "QuizCreateNameLengthInvalid"
-	QuizCreatedMessage            string = "QuizCreatedMessage"
-	QuizQuestionNameLengthInvalid string = "QuizQuestionNameLengthInvalid"
+	QuizCreateBtn                   string = "QuizCreateBtn"
+	QuizCreateNameLengthInvalid     string = "QuizCreateNameLengthInvalid"
+	QuizCreatedMessage              string = "QuizCreatedMessage"
+	QuizQuestionNameLengthInvalid   string = "QuizQuestionNameLengthInvalid"
+	QuizQuestionCreatedMessage      string = "QuizQuestionCreatedMessage"
+	QuizQuestionAnswersCountInvalid string = "QuizQuestionAnswersCountInvalid"
+	QuizAddNewQuestionBtn           string = "QuizAddNewQuestionBtn"
+	QuizAddingQuestionsStopBtn      string = "QuizAddingQuestionsStopBtn"
+	QuizQuestionAnswerInvalidLength string = "QuizQuestionAnswerInvalidLength"
 
 	InvitationKeyRequired          string = "InvitationKeyRequired"
 	InvitationKeyCreateBtn         string = "InvitationKeyCreateBtn"

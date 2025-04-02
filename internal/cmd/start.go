@@ -67,12 +67,12 @@ func (s *Start) Run(b *tele.Bot, ctx tele.Context, args []string) error {
 
 	selector := &tele.ReplyMarkup{}
 
-	testCreateBtn := selector.Data(i18n.Translatef(lang.QuizCreateBtn, languageCode), "quiz_create")
+	quizCreateBtn := selector.Data(i18n.Translatef(lang.QuizCreateBtn, languageCode), "quiz_create")
 
 	if u.Role == (role.Admin{}).Name() {
 		admInvitationCreateBtn := selector.Data(i18n.Translatef(lang.InvitationKeyCreateBtn, languageCode), "adm_inv_create")
 
-		selector.Inline(selector.Row(admInvitationCreateBtn))
+		selector.Inline(selector.Row(admInvitationCreateBtn, quizCreateBtn))
 
 		if _, err := b.Reply(ctx.Message(), i18n.Translatef(lang.AdminPanelTitle, languageCode, u.Name, u.Patronymic), selector); err != nil {
 			return err

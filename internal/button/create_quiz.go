@@ -7,8 +7,10 @@ import (
 	"benzo/internal/repository/repository_model"
 	"benzo/internal/user/role"
 	"benzo/pkg/i18n"
+	"fmt"
 	tele "gopkg.in/telebot.v4"
 	"log/slog"
+	"strings"
 )
 
 type CreateQuiz struct {
@@ -21,6 +23,12 @@ const (
 
 	minQuestionLength int = 5
 	maxQuestionLength int = 50
+
+	minQuestionAnswerLength int = 5
+	maxQuestionAnswerLength int = 20
+
+	minQuestionAnswersCount int = 2
+	maxQuestionAnswersCount int = 5
 )
 
 func (b *CreateQuiz) Run(bot *tele.Bot, ctx tele.Context, args []string) error {
@@ -40,7 +48,7 @@ func (b *CreateQuiz) createQuizCallback(_ *tele.Bot, ctx tele.Context) bool {
 		return false
 	}
 
-	quizId, err := repository.Repo().SaveNewQuiz(repository_model.NewQuiz(quizName, id))
+	quizID, err := repository.Repo().SaveNewQuiz(repository_model.NewQuiz(quizName, id))
 
 	if err != nil {
 		_ = ctx.Send(i18n.Translatef(lang.RuntimeError, languageCode, err.Error()))
@@ -59,16 +67,82 @@ func (b *CreateQuiz) createQuestionCallback(quizID int64) callback.CallbackFunc 
 		languageCode := ctx.Message().Sender.LanguageCode
 		question := ctx.Message().Text
 
+		quiz, err := repository.Repo().GetQuizByID(quizID)
+
+		if err != nil {
+			_ = ctx.Reply(i18n.Translatef(lang.RuntimeError, languageCode, err.Error()))
+			return true
+		}
+
+		if quiz.ID != id {
+			_ = ctx.Reply(i18n.Translatef(lang.RuntimeError, languageCode, "quiz does not exist"))
+			return true
+		}
+
 		if len(question) < minQuestionLength || len(question) > maxQuestionLength {
-			_ = ctx.Send(i18n.Translatef(lang.QuizQuestionNameLengthInvalid, languageCode))
+			_ = ctx.Reply(i18n.Translatef(lang.QuizQuestionNameLengthInvalid, languageCode))
 			return false
 		}
 
-		if err := repository.Repo().SaveNewQuestion(repository_model.NewQuestion(quizID, question, "", "")); err != nil {
-			//koroche pust teper answeri kidaet potom etu xuetu v cikl
+		questionID, err := repository.Repo().SaveNewQuestion(repository_model.NewQuestion(quizID, question, "", ""))
+
+		if err != nil {
+			_ = ctx.Reply(i18n.Translatef(lang.RuntimeError, languageCode, err.Error()))
+
+			return true
+		}
+
+		callback.Subscribe(id, b.addAnswersToQuestionCallback(quizID, questionID))
+
+		_ = ctx.Reply(i18n.Translatef(lang.QuizQuestionCreatedMessage, languageCode))
+
+		return true
+	}
+}
+
+func (b *CreateQuiz) addAnswersToQuestionCallback(quizID, questionID int64) callback.CallbackFunc {
+	return func(_ *tele.Bot, ctx tele.Context) bool {
+		id := ctx.Message().Sender.ID
+		languageCode := ctx.Message().Sender.LanguageCode
+
+		answers := strings.Split(ctx.Message().Text, ";")
+
+		if len(answers) < minQuestionAnswersCount || len(answers) > maxQuestionAnswersCount {
+			_ = ctx.Reply(i18n.Translatef(lang.QuizQuestionAnswersCountInvalid, languageCode))
 
 			return false
 		}
+
+		for _, answer := range answers {
+			if len(answer) < minQuestionAnswerLength || len(answer) > maxQuestionAnswerLength {
+				_ = ctx.Reply(i18n.Translatef(lang.QuizQuestionAnswerInvalidLength, languageCode, answer))
+
+				return false
+			}
+		}
+
+		questions, err := repository.Repo().GetQuestionsByQuizID(quizID)
+
+		if err != nil {
+			_ = ctx.Reply(i18n.Translatef(lang.RuntimeError, languageCode, err.Error()))
+
+			return false
+		}
+
+		if err := repository.Repo().UpdateQuestionAnswers(questionID, answers); err != nil {
+			_ = ctx.Reply(i18n.Translatef(lang.RuntimeError, languageCode, err.Error()))
+
+			return false
+		}
+
+		selector := &tele.ReplyMarkup{}
+
+		buttons := []tele.Btn{selector.Data(i18n.Translatef(lang.QuizAddNewQuestionBtn, languageCode), fmt.Sprintf("quiz_add_new_question-%d", quizID))}
+
+		if len(questions) > 0 {
+			buttons = append(buttons, selector.Data(i18n.Translatef(lang.QuizAddingQuestionsStopBtn, languageCode), fmt.Sprintf("quiz_adding_buttons_stop-%d", quizID)))
+		}
+
 	}
 }
 
