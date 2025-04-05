@@ -33,9 +33,21 @@ var (
 	//go:embed question/insert.sql
 	InsertQuestion string
 
+	//go:embed question/select.sql
+	SelectQuestion string
+
+	//go:embed question/delete.sql
+	DeleteQuestion string
+
 	//go:embed question/select_by_quiz_id.sql
 	SelectQuestionsByQuizID string
 
 	//go:embed question/update_answers.sql
 	UpdateQuestionAnswers string
+
+	//go:embed quiz_progress/select_by_quiz_id.sql
+	SelectQuizProgressByQuizID string
+
+	//go:embed quiz_progress/select_by_user_id.sql
+	SelectQuizProgressByUserID string
 )

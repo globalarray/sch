@@ -41,10 +41,13 @@ func (m *Manager) Get(endpoint string) (Button, bool) {
 func (m *Manager) regButtons() {
 	m.buttonsRegOnce.Do(func() {
 		bttns := []Button{
-			&CreateInvitationKey{log: m.log.With(slog.String("level", "button/create_invitation_key"))},
-			&FillPersonalData{log: m.log.With(slog.String("level", "button/fill_personal_data"))},
-			&SetRoleKey{log: m.log.With(slog.String("level", "button/set_role_key"))},
-			&RemoveInvitationKey{log: m.log.With(slog.String("level", "button/remove_invitation_key"))},
+			&CreateInvitationKey{log: m.log.With(slog.String("btn", "create_invitation_key"))},
+			&FillPersonalData{log: m.log.With(slog.String("btn", "fill_personal_data"))},
+			&SetRoleKey{log: m.log.With(slog.String("btn", "set_role_key"))},
+			&RemoveInvitationKey{log: m.log.With(slog.String("btn", "remove_invitation_key"))},
+			&CreateQuiz{log: m.log.With(slog.String("btn", "create_quiz"))},
+			&AddQuestionQuiz{log: m.log.With(slog.String("btn", "add_question_quiz"))},
+			&RemoveQuestionQuiz{log: m.log.With(slog.String("btn", "remove_question_quiz"))},
 		}
 
 		for _, b := range bttns {

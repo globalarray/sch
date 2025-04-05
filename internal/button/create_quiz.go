@@ -19,10 +19,10 @@ type CreateQuiz struct {
 
 const (
 	minQuizNameLength int = 5
-	maxQuizNameLength int = 20
+	maxQuizNameLength int = 256
 
 	minQuestionLength int = 5
-	maxQuestionLength int = 50
+	maxQuestionLength int = 256
 
 	minQuestionAnswerLength int = 5
 	maxQuestionAnswerLength int = 20
@@ -31,37 +31,42 @@ const (
 	maxQuestionAnswersCount int = 5
 )
 
-func (b *CreateQuiz) Run(bot *tele.Bot, ctx tele.Context, args []string) error {
+func (b *CreateQuiz) Run(_ *tele.Bot, ctx tele.Context, _ []string) error {
 	id := ctx.Callback().Sender.ID
 	languageCode := ctx.Callback().Sender.LanguageCode
 
 	callback.Subscribe(id, b.createQuizCallback)
+
+	return ctx.Send(i18n.Translatef(lang.QuizCreateStartMessage, languageCode))
 }
 
 func (b *CreateQuiz) createQuizCallback(_ *tele.Bot, ctx tele.Context) bool {
 	languageCode := ctx.Message().Sender.LanguageCode
-	id := ctx.Callback().Sender.ID
+	id := ctx.Message().Sender.ID
 	quizName := ctx.Message().Text
 
 	if len(quizName) < minQuizNameLength || len(quizName) > maxQuizNameLength {
-		_ = ctx.Send(i18n.Translatef(lang.QuizCreateNameLengthInvalid, languageCode))
+		_ = ctx.Reply(i18n.Translatef(lang.QuizCreateNameLengthInvalid, languageCode))
+
 		return false
 	}
 
 	quizID, err := repository.Repo().SaveNewQuiz(repository_model.NewQuiz(quizName, id))
 
 	if err != nil {
-		_ = ctx.Send(i18n.Translatef(lang.RuntimeError, languageCode, err.Error()))
+		_ = ctx.Reply(i18n.Translatef(lang.RuntimeError, languageCode, err.Error()))
 
 		return false
 	}
 
-	_ = ctx.Send(i18n.Translatef(lang.QuizCreatedMessage, languageCode))
+	callback.Subscribe(id, createQuestionCallback(quizID))
 
-	return true
+	_ = ctx.Reply(i18n.Translatef(lang.QuizCreatedMessage, languageCode))
+
+	return false
 }
 
-func (b *CreateQuiz) createQuestionCallback(quizID int64) callback.CallbackFunc {
+func createQuestionCallback(quizID int64) callback.CallbackFunc {
 	return func(_ *tele.Bot, ctx tele.Context) bool {
 		id := ctx.Message().Sender.ID
 		languageCode := ctx.Message().Sender.LanguageCode
@@ -74,7 +79,7 @@ func (b *CreateQuiz) createQuestionCallback(quizID int64) callback.CallbackFunc 
 			return true
 		}
 
-		if quiz.ID != id {
+		if quiz.ID != quizID {
 			_ = ctx.Reply(i18n.Translatef(lang.RuntimeError, languageCode, "quiz does not exist"))
 			return true
 		}
@@ -92,17 +97,16 @@ func (b *CreateQuiz) createQuestionCallback(quizID int64) callback.CallbackFunc 
 			return true
 		}
 
-		callback.Subscribe(id, b.addAnswersToQuestionCallback(quizID, questionID))
+		callback.Subscribe(id, addAnswersToQuestionCallback(quizID, questionID))
 
 		_ = ctx.Reply(i18n.Translatef(lang.QuizQuestionCreatedMessage, languageCode))
 
-		return true
+		return false
 	}
 }
 
-func (b *CreateQuiz) addAnswersToQuestionCallback(quizID, questionID int64) callback.CallbackFunc {
+func addAnswersToQuestionCallback(quizID, questionID int64) callback.CallbackFunc {
 	return func(_ *tele.Bot, ctx tele.Context) bool {
-		id := ctx.Message().Sender.ID
 		languageCode := ctx.Message().Sender.LanguageCode
 
 		answers := strings.Split(ctx.Message().Text, ";")
@@ -137,12 +141,20 @@ func (b *CreateQuiz) addAnswersToQuestionCallback(quizID, questionID int64) call
 
 		selector := &tele.ReplyMarkup{}
 
-		buttons := []tele.Btn{selector.Data(i18n.Translatef(lang.QuizAddNewQuestionBtn, languageCode), fmt.Sprintf("quiz_add_new_question-%d", quizID))}
+		addNewQuestionBtn := selector.Data(i18n.Translatef(lang.QuizAddNewQuestionBtn, languageCode), fmt.Sprintf("add_new_question_quiz-%d", quizID))
+		deleteQuestionBtn := selector.Data(i18n.Translatef(lang.QuizQuestionRemoveBtn, languageCode), fmt.Sprintf("remove_question_quiz-%d", questionID))
 
-		if len(questions) > 0 {
-			buttons = append(buttons, selector.Data(i18n.Translatef(lang.QuizAddingQuestionsStopBtn, languageCode), fmt.Sprintf("quiz_adding_buttons_stop-%d", quizID)))
+		rows := []tele.Row{selector.Row(addNewQuestionBtn, deleteQuestionBtn)}
+
+		if len(questions) > 1 {
+			rows = append(rows, selector.Row(selector.Data(i18n.Translatef(lang.QuizAddingQuestionsStopBtn, languageCode), fmt.Sprintf("get_info_quiz-%d", quizID))))
 		}
 
+		selector.Inline(rows...)
+
+		_ = ctx.Reply(i18n.Translatef(lang.QuizQuestionAnswersAdded, languageCode), selector)
+
+		return true
 	}
 }
 

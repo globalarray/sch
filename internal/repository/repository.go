@@ -176,11 +176,32 @@ func (repo *Repository) GetQuizByID(id int64) (q repository_model.Quiz, err erro
 		}
 	}
 
-	if err := new(datasource.DataSource).QuerySQL(repo.db.Queryx(query, id)).Scan(row); err != nil {
-		return q, err
+	err = new(datasource.DataSource).QuerySQL(repo.db.Queryx(query, id)).Scan(row)
+
+	return q, err
+}
+
+func (repo *Repository) GetQuestionByID(id int64) (q repository_model.Question, err error) {
+	query := repository_query.SelectQuestion
+
+	row := func(idx int) utils.Array {
+		return utils.Array{
+			&q.ID,
+			&q.QuizID,
+			&q.Question,
+			&q.Answers,
+		}
 	}
 
-	return q, nil
+	err = new(datasource.DataSource).QuerySQL(repo.db.Queryx(query, id)).Scan(row)
+
+	return q, err
+}
+
+func (repo *Repository) RemoveQuestionByID(id int64) error {
+	query := repository_query.DeleteQuestion
+
+	return new(datasource.DataSource).ExecSQL(repo.db.Exec(query, id)).Scan(nil, nil)
 }
 
 func (repo *Repository) GetQuestionsByQuizID(quizID int64) (questions []repository_model.Question, err error) {

@@ -8,7 +8,9 @@ const (
 	Teacher string = "Teacher"
 	Admin   string = "Admin"
 
-	AdminPanelTitle string = "AdminPanelTitle"
+	AdminPanelTitle   string = "AdminPanelTitle"
+	TeacherPanelTitle string = "TeacherPanelTitle"
+	StudentPanelTitle string = "StudentPanelTitle"
 
 	QuizCreateBtn                   string = "QuizCreateBtn"
 	QuizCreateNameLengthInvalid     string = "QuizCreateNameLengthInvalid"
@@ -17,8 +19,17 @@ const (
 	QuizQuestionCreatedMessage      string = "QuizQuestionCreatedMessage"
 	QuizQuestionAnswersCountInvalid string = "QuizQuestionAnswersCountInvalid"
 	QuizAddNewQuestionBtn           string = "QuizAddNewQuestionBtn"
+	QuizQuestionRemoveBtn           string = "QuizQuestionRemoveBtn"
 	QuizAddingQuestionsStopBtn      string = "QuizAddingQuestionsStopBtn"
 	QuizQuestionAnswerInvalidLength string = "QuizQuestionAnswerInvalidLength"
+	QuizQuestionAnswersAdded        string = "QuizQuestionAnswersAdded"
+	QuizCreateStartMessage          string = "QuizCreateStartMessage"
+	QuizQuestionSetNameMessage      string = "QuizQuestionSetNameMessage"
+	QuizQuestionDeletedMessage      string = "QuizQuestionDeletedMessage"
+
+	QuizInfoTitle              string = "QuizInfoTitle"
+	QuizInfoInvitationLinkLine string = "QuizInfoInvitationLinkLine"
+	QuizInfoQuestionsCountLine string = "QuizInfoQuestionsCountLine"
 
 	InvitationKeyRequired          string = "InvitationKeyRequired"
 	InvitationKeyCreateBtn         string = "InvitationKeyCreateBtn"
