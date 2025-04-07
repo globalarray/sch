@@ -1,0 +1,1 @@
+DELETE FROM quiz WHERE `id` = ?;

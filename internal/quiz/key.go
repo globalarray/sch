@@ -59,6 +59,10 @@ func Decode(key string) (int64, error) {
 		return 0, err
 	}
 
+	if len(buf) < ShortestBlockSize {
+		return 0, ErrQuizNotFound
+	}
+
 	hashSum := buf[:ShortestBlockSize]
 
 	r := bytes.NewBuffer(buf[ShortestBlockSize:])

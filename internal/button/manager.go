@@ -48,6 +48,10 @@ func (m *Manager) regButtons() {
 			&CreateQuiz{log: m.log.With(slog.String("btn", "create_quiz"))},
 			&AddQuestionQuiz{log: m.log.With(slog.String("btn", "add_question_quiz"))},
 			&RemoveQuestionQuiz{log: m.log.With(slog.String("btn", "remove_question_quiz"))},
+			&GetInfoQuiz{log: m.log.With(slog.String("btn", "get_info_quiz"))},
+			&ListQuiz{log: m.log.With(slog.String("btn", "list_quiz"))},
+			&RemoveQuiz{log: m.log.With(slog.String("btn", "remove_quiz"))},
+			&AnswerQuestion{log: m.log.With(slog.String("btn", "answer_question"))},
 		}
 
 		for _, b := range bttns {

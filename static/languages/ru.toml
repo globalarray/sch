@@ -14,6 +14,8 @@ TeacherPanelTitle="<b>%s %s,</b> добро пожаловать в панель
 StudentPanelTitle="<b>%s %s,</b>, привет! Воспользуйся интерактивными кнопками."
 
 QuizCreateBtn="Создать тест"
+QuizListBtn="Мои тесты"
+QuizRemoveBtn="Удалить тест"
 QuizCreateNameLengthInvalid="Длина имени теста не соответствует ограничениям (от 5 до 256 символов)."
 QuizCreatedMessage="Отлично. Тест создан.\nТеперь начнем заполнять его вопросами.\n\nНачнем с 1-го. Отправьте сначала сам вопрос."
 QuizQuestionNameLengthInvalid="Длина вопроса не соответствует норме (от 5 до 256 символов)."
@@ -27,10 +29,21 @@ QuizCreateStartMessage="Отправьте название теста."
 QuizQuestionAnswersCountInvalid="Количество возможных ответов должно быть не менее 2-х и не более 5."
 QuizQuestionSetNameMessage="Отправьте название нового вопроса."
 QuizQuestionDeletedMessage="Вопрос удален."
+QuizRemovedMessage="Тест \"%s\" удален."
 
-QuizInfoTitle="Информация о тесте \"%s\""
+QuizListTitle="Ваши тесты:"
+QuizEmptyListTitle="У вас нет тестов."
+
+QuestionTitle="Вопрос %d/%d:"
+
+QuizInfoTitle="Информация о тесте \"%s\":"
 QuizInfoInvitationLinkLine="Ссылка на тест: <code>t.me/schtool_bot?start=%s</code>"
-QuizInfoQuestionsCountLine="Количество вопросов: %d"
+QuizInfoQuestionsCountLine="Количество вопросов: <b>%d</b>"
+QuizInfoCompletedUsersLine="Результаты тестирования (%d прошло):"
+QuizInfoUserResultLine="[%s] <b>%s %s</b>: %d/%d"
+
+QuizAlreadyCompleted="Тест \"%s\" был пройден Вами ранее. Повторное прохождение невозможно."
+QuizCompletedMessage="⚡ Вы успешно прошли тест \"%s\".\n\nВаш результат <b>%d</b> правильных ответов из <b>%d</b> возможных."
 
 InvitationKeyRequired="Вы отсутствуете в базе данных школы.\n\nЧтобы подключиться к системе Sch, необходимо отправить invitation-ключ.\nЕсли таковой у Вас отсутствует, то обратитесь к техническому администратору."
 InvitationKeyCreateBtn="Создать пригл. ключ"

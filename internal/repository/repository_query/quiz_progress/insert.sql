@@ -1,0 +1,1 @@
+INSERT INTO quiz_progress(`user_id`, `quiz_id`, `question_id`, `answer`, `correct`) VALUES(?, ?, ?, ?, ?)

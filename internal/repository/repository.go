@@ -224,3 +224,110 @@ func (repo *Repository) UpdateQuestionAnswers(questionID int64, answers []string
 
 	return new(datasource.DataSource).ExecSQL(repo.db.Exec(query, args...)).Scan(nil, nil)
 }
+
+func (repo *Repository) SelectUsersQuizProgressByQuizID(quizID int64) (progresses []repository_model.QuizProgress, err error) {
+	query := repository_query.SelectAllUsersQuizProgress
+
+	if err := repo.db.Select(&progresses, query, quizID); err != nil {
+		return progresses, err
+	}
+
+	return progresses, nil
+}
+
+func (repo *Repository) SelectQuizResultByQuizID(quizID int64) (results []repository_model.QuizResult, err error) {
+	query := repository_query.SelectQuizResultByQuizID
+
+	if err := repo.db.Select(&results, query, quizID); err != nil {
+		return results, err
+	}
+
+	return results, nil
+}
+
+func (repo *Repository) GetQuizzesCreatedByUserID(userID int64) (quizzes []repository_model.Quiz, err error) {
+	query := repository_query.SelectQuizzesCreatedByUserID
+
+	if err := repo.db.Select(&quizzes, query, userID); err != nil {
+		return quizzes, err
+	}
+
+	return quizzes, nil
+}
+
+func (repo *Repository) RemoveQuizByID(quizID int64) error {
+	query := repository_query.DeleteQuiz
+
+	return new(datasource.DataSource).ExecSQL(repo.db.Exec(query, quizID)).Scan(nil, nil)
+}
+
+func (repo *Repository) RemoveQuestionsByQuizID(quizID int64) error {
+	query := repository_query.DeleteQuestionsByQuizID
+
+	return new(datasource.DataSource).ExecSQL(repo.db.Exec(query, quizID)).Scan(nil, nil)
+}
+
+func (repo *Repository) RemoveProgressesByQuizID(quizID int64) error {
+	query := repository_query.DeleteProgressesByQuizID
+
+	return new(datasource.DataSource).ExecSQL(repo.db.Exec(query, quizID)).Scan(nil, nil)
+}
+
+func (repo *Repository) RemoveResultsByQuizID(quizID int64) error {
+	query := repository_query.DeleteResultsByQuizID
+
+	return new(datasource.DataSource).ExecSQL(repo.db.Exec(query, quizID)).Scan(nil, nil)
+}
+
+func (repo *Repository) GetQuizResultByUserID(quizID, userID int64) (qr repository_model.QuizResult, err error) {
+	query := repository_query.SelectQuizResult
+
+	row := func(idx int) utils.Array {
+		return utils.Array{
+			&qr.UserID,
+			&qr.QuizID,
+			&qr.Score,
+			&qr.CompletedIn,
+		}
+	}
+
+	err = new(datasource.DataSource).QuerySQL(repo.db.Queryx(query, quizID, userID)).Scan(row)
+
+	return qr, err
+}
+
+func (repo *Repository) GetQuizProgressByUserID(quizID, userID int64) (qr []repository_model.QuizProgress, err error) {
+	query := repository_query.SelectUserQuizProgress
+
+	if err := repo.db.Select(&qr, query, quizID, userID); err != nil {
+		return qr, err
+	}
+
+	return qr, nil
+}
+
+func (repo *Repository) SaveNewQuizResult(qr repository_model.QuizResult) error {
+	query := repository_query.InsertQuizResult
+
+	args := utils.Array{
+		qr.UserID,
+		qr.QuizID,
+		qr.Score,
+	}
+
+	return new(datasource.DataSource).ExecSQL(repo.db.Exec(query, args...)).Scan(nil, nil)
+}
+
+func (repo *Repository) SaveNewQuizProgress(qp repository_model.QuizProgress) error {
+	query := repository_query.InsertQuizProgress
+
+	args := utils.Array{
+		qp.UserID,
+		qp.QuizID,
+		qp.QuestionID,
+		qp.Answer,
+		qp.Correct,
+	}
+
+	return new(datasource.DataSource).ExecSQL(repo.db.Exec(query, args...)).Scan(nil, nil)
+}

@@ -30,6 +30,12 @@ var (
 	//go:embed quiz/select.sql
 	SelectQuiz string
 
+	//go:embed quiz/delete.sql
+	DeleteQuiz string
+
+	//go:embed quiz/select_by_created_by.sql
+	SelectQuizzesCreatedByUserID string
+
 	//go:embed question/insert.sql
 	InsertQuestion string
 
@@ -39,15 +45,36 @@ var (
 	//go:embed question/delete.sql
 	DeleteQuestion string
 
+	//go:embed question/delete_by_quiz_id.sql
+	DeleteQuestionsByQuizID string
+
 	//go:embed question/select_by_quiz_id.sql
 	SelectQuestionsByQuizID string
 
 	//go:embed question/update_answers.sql
 	UpdateQuestionAnswers string
 
-	//go:embed quiz_progress/select_by_quiz_id.sql
-	SelectQuizProgressByQuizID string
+	//go:embed quiz_progress/insert.sql
+	InsertQuizProgress string
 
-	//go:embed quiz_progress/select_by_user_id.sql
-	SelectQuizProgressByUserID string
+	//go:embed quiz_progress/select_user.sql
+	SelectUserQuizProgress string
+
+	//go:embed quiz_progress/delete_by_quiz_id.sql
+	DeleteProgressesByQuizID string
+
+	//go:embed quiz_progress/select_quiz.sql
+	SelectAllUsersQuizProgress string
+
+	//go:embed quiz_result/insert.sql
+	InsertQuizResult string
+
+	//go:embed quiz_result/select.sql
+	SelectQuizResult string
+
+	//go:embed quiz_result/select_by_quiz_id.sql
+	SelectQuizResultByQuizID string
+
+	//go:embed quiz_result/delete_by_quiz_id.sql
+	DeleteResultsByQuizID string
 )

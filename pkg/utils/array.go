@@ -1,7 +1,29 @@
 package utils
 
+import (
+	"math/rand"
+)
+
 // Array extends `[]interface{}`, and it should be used to represent json-like data.
 type Array []interface{}
+
+func ShuffleSlice[T any](slice []T) {
+	rand.Shuffle(len(slice), func(i, j int) {
+		slice[i], slice[j] = slice[j], slice[i]
+	})
+}
+
+func Filter[T any](data []T, f func(T) bool) []T {
+	fltd := make([]T, 0, len(data))
+
+	for _, e := range data {
+		if f(e) {
+			fltd = append(fltd, e)
+		}
+	}
+
+	return fltd
+}
 
 func (l *Array) do(do func()) {
 	if len(*l) < 1 {

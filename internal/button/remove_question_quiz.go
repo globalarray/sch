@@ -57,6 +57,10 @@ func (b *RemoveQuestionQuiz) Run(_ *tele.Bot, ctx tele.Context, args []string) e
 
 	selector.Inline(selector.Row(buttons...))
 
+	if err := repository.Repo().RemoveQuestionByID(questionID); err != nil {
+		return ctx.Send(i18n.Translatef(lang.RuntimeError, languageCode, err.Error()))
+	}
+
 	return ctx.Send(i18n.Translatef(lang.QuizQuestionDeletedMessage, languageCode), selector)
 }
 

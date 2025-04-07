@@ -1,0 +1,1 @@
+INSERT INTO quiz_result(`user_id`, `quiz_id`, `score`) VALUES(?, ?, ?);

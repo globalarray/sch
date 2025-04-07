@@ -13,6 +13,8 @@ const (
 	StudentPanelTitle string = "StudentPanelTitle"
 
 	QuizCreateBtn                   string = "QuizCreateBtn"
+	QuizRemoveBtn                   string = "QuizRemoveBtn"
+	QuizListBtn                     string = "QuizListBtn"
 	QuizCreateNameLengthInvalid     string = "QuizCreateNameLengthInvalid"
 	QuizCreatedMessage              string = "QuizCreatedMessage"
 	QuizQuestionNameLengthInvalid   string = "QuizQuestionNameLengthInvalid"
@@ -26,10 +28,20 @@ const (
 	QuizCreateStartMessage          string = "QuizCreateStartMessage"
 	QuizQuestionSetNameMessage      string = "QuizQuestionSetNameMessage"
 	QuizQuestionDeletedMessage      string = "QuizQuestionDeletedMessage"
+	QuizRemovedMessage              string = "QuizRemovedMessage"
+	QuizAlreadyCompleted            string = "QuizAlreadyCompleted"
+	QuizCompletedMessage            string = "QuizCompletedMessage"
+
+	QuestionTitle string = "QuestionTitle"
+
+	QuizListTitle      string = "QuizListTitle"
+	QuizEmptyListTitle string = "QuizEmptyListTitle"
 
 	QuizInfoTitle              string = "QuizInfoTitle"
 	QuizInfoInvitationLinkLine string = "QuizInfoInvitationLinkLine"
 	QuizInfoQuestionsCountLine string = "QuizInfoQuestionsCountLine"
+	QuizInfoCompletedUsersLine string = "QuizInfoCompletedUsersLine"
+	QuizInfoUserResultLine     string = "QuizInfoUserResultLine"
 
 	InvitationKeyRequired          string = "InvitationKeyRequired"
 	InvitationKeyCreateBtn         string = "InvitationKeyCreateBtn"

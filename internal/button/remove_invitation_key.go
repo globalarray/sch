@@ -21,6 +21,8 @@ func (b *RemoveInvitationKey) Run(_ *tele.Bot, ctx tele.Context, args []string) 
 		return ErrInvalidUsage
 	}
 
+	languageCode := ctx.Callback().Sender.LanguageCode
+
 	sec, err := repository.Repo().GetSecretByKey(args[0])
 
 	if err != nil {
@@ -35,7 +37,7 @@ func (b *RemoveInvitationKey) Run(_ *tele.Bot, ctx tele.Context, args []string) 
 		return err
 	}
 
-	return ctx.Send(i18n.Translatef(lang.InvitationKeyRemoved, sec.Key))
+	return ctx.Send(i18n.Translatef(lang.InvitationKeyRemoved, languageCode, sec.Key))
 }
 
 func (b *RemoveInvitationKey) NeedRightsLevel() int {

@@ -1,0 +1,1 @@
+DELETE FROM quiz_progress WHERE `quiz_id` = ?;
