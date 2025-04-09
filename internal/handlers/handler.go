@@ -36,7 +36,7 @@ func (h *TeleHandler) onText(ctx tele.Context) error {
 	id := ctx.Message().Sender.ID
 
 	if callback.Exists(id) {
-		callback.Call(h.b, ctx)
+		callback.Call(ctx)
 
 		return nil
 	}
@@ -45,7 +45,7 @@ func (h *TeleHandler) onText(ctx tele.Context) error {
 		cmdData := strings.Split(ctx.Text(), " ")
 
 		if c, ok := cmd.Mgr().Get(cmdData[0][1:]); ok {
-			return c.Run(h.b, ctx, cmdData[1:])
+			return c.Run(ctx, cmdData[1:])
 		}
 	}
 
@@ -80,7 +80,7 @@ func (h *TeleHandler) onCallback(ctx tele.Context) error {
 			}
 		}
 
-		return b.Run(h.b, ctx, args[1:])
+		return b.Run(ctx, args[1:])
 	}
 
 	return nil

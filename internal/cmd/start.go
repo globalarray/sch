@@ -5,9 +5,9 @@ import (
 	"benzo/internal/quiz"
 	"benzo/internal/repository"
 	"benzo/internal/repository/repository_model"
-	"benzo/internal/service"
 	"benzo/internal/user/role"
 	"benzo/pkg/i18n"
+	"fmt"
 	tele "gopkg.in/telebot.v4"
 	"log/slog"
 	"time"
@@ -17,7 +17,7 @@ type Start struct {
 	log *slog.Logger
 }
 
-func (s *Start) Run(b *tele.Bot, ctx tele.Context, args []string) error {
+func (s *Start) Run(ctx tele.Context, args []string) error {
 	id := ctx.Sender().ID
 	languageCode := ctx.Sender().LanguageCode
 
@@ -54,7 +54,9 @@ func (s *Start) Run(b *tele.Bot, ctx tele.Context, args []string) error {
 			return ctx.Send(i18n.Translatef(lang.RuntimeError, languageCode))
 		}
 
-		if err := repository.Repo().SaveNewUser(repository_model.NewUser(id, sec.Name, sec.Surname, sec.Patronymic, sec.Role)); err != nil {
+		u := repository_model.NewUser(id, sec.Name, sec.Surname, sec.Patronymic, sec.Role)
+
+		if err := repository.Repo().SaveNewUser(u); err != nil {
 			s.log.Error("error saving new user", slog.Any("err", err))
 
 			_ = repository.Repo().SaveNewSecret(sec)
@@ -64,8 +66,10 @@ func (s *Start) Run(b *tele.Bot, ctx tele.Context, args []string) error {
 
 		r, _ := role.FromName(sec.Role)
 
-		return ctx.Send(i18n.Translatef(lang.InvitationKeyApplied, languageCode, sec.Name, sec.Patronymic, i18n.Translatef(r.Translation(), languageCode)))
+		return ctx.Send(i18n.Translatef(lang.InvitationKeyApplied, languageCode, u.PrettyName(), i18n.Translatef(r.Translation(), languageCode)))
 	}
+
+	selector := &tele.ReplyMarkup{}
 
 	if len(args) == 1 {
 		quizID, err := quiz.Decode(args[0])
@@ -74,10 +78,20 @@ func (s *Start) Run(b *tele.Bot, ctx tele.Context, args []string) error {
 			return err
 		}
 
-		return service.Quiz().ProcessQuiz(ctx, quizID, id, languageCode)
-	}
+		q, err := repository.Repo().GetQuizByID(quizID)
 
-	selector := &tele.ReplyMarkup{}
+		if err != nil {
+			return err
+		}
+
+		if q.ID != quizID {
+			return ctx.Reply(i18n.Translatef(lang.QuizNotFound, languageCode))
+		}
+
+		selector.Inline(selector.Row(selector.Data(i18n.Translatef(lang.QuizStartBtn, languageCode), fmt.Sprintf("start_quiz-%d", quizID))))
+
+		return ctx.Reply(i18n.Translatef(lang.QuizStartMessage, languageCode, u.PrettyName(), q.Name), selector)
+	}
 
 	quizCreateBtn := selector.Data(i18n.Translatef(lang.QuizCreateBtn, languageCode), "quiz_create")
 	quizListBtn := selector.Data(i18n.Translatef(lang.QuizListBtn, languageCode), "quiz_list")
@@ -87,7 +101,7 @@ func (s *Start) Run(b *tele.Bot, ctx tele.Context, args []string) error {
 	if u.Role == (role.Teacher{}).Name() {
 		selector.Inline(teacherButtonsRow)
 
-		return ctx.Reply(i18n.Translatef(lang.TeacherPanelTitle, languageCode, u.Name, u.Patronymic), selector)
+		return ctx.Reply(i18n.Translatef(lang.TeacherPanelTitle, languageCode, u.PrettyName()), selector)
 	}
 
 	if u.Role == (role.Admin{}).Name() {
@@ -95,7 +109,7 @@ func (s *Start) Run(b *tele.Bot, ctx tele.Context, args []string) error {
 
 		selector.Inline(teacherButtonsRow, selector.Row(admInvitationCreateBtn))
 
-		return ctx.Reply(i18n.Translatef(lang.AdminPanelTitle, languageCode, u.Name, u.Patronymic), selector)
+		return ctx.Reply(i18n.Translatef(lang.AdminPanelTitle, languageCode, u.PrettyName()), selector)
 	}
 
 	//sendMenu

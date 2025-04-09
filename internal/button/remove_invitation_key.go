@@ -16,7 +16,7 @@ type RemoveInvitationKey struct {
 
 var ErrInvalidKey = errors.New("invalid key")
 
-func (b *RemoveInvitationKey) Run(_ *tele.Bot, ctx tele.Context, args []string) error {
+func (b *RemoveInvitationKey) Run(ctx tele.Context, args []string) error {
 	if len(args) != 1 {
 		return ErrInvalidUsage
 	}

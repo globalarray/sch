@@ -8,7 +8,6 @@ import (
 	tele "gopkg.in/telebot.v4"
 	"log/slog"
 	"strconv"
-	"strings"
 )
 
 type AnswerQuestion struct {
@@ -20,7 +19,7 @@ var (
 	ErrInvalidQuestion = errors.New("invalid question")
 )
 
-func (b *AnswerQuestion) Run(_ *tele.Bot, ctx tele.Context, args []string) error {
+func (b *AnswerQuestion) Run(ctx tele.Context, args []string) error {
 	if len(args) != 2 {
 		return ErrInvalidUsage
 	}
@@ -29,6 +28,12 @@ func (b *AnswerQuestion) Run(_ *tele.Bot, ctx tele.Context, args []string) error
 	languageCode := ctx.Callback().Sender.LanguageCode
 
 	questionID, err := strconv.ParseInt(args[0], 10, 64)
+
+	if err != nil {
+		return err
+	}
+
+	answerIdx, err := strconv.Atoi(args[1])
 
 	if err != nil {
 		return err
@@ -44,9 +49,7 @@ func (b *AnswerQuestion) Run(_ *tele.Bot, ctx tele.Context, args []string) error
 		return ErrInvalidQuestion
 	}
 
-	correctAnswer := strings.Split(q.Answers, ";")[0]
-
-	if err := repository.Repo().SaveNewQuizProgress(repository_model.NewQuizProgress(id, q.QuizID, questionID, args[1], args[1] == correctAnswer)); err != nil {
+	if err := repository.Repo().SaveNewQuizProgress(repository_model.NewQuizProgress(id, q.QuizID, questionID, answerIdx, answerIdx == 0)); err != nil {
 		return err
 	}
 

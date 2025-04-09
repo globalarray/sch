@@ -24,14 +24,14 @@ const (
 	minQuestionLength int = 5
 	maxQuestionLength int = 256
 
-	minQuestionAnswerLength int = 5
-	maxQuestionAnswerLength int = 20
+	minQuestionAnswerLength int = 2
+	maxQuestionAnswerLength int = 100
 
 	minQuestionAnswersCount int = 2
 	maxQuestionAnswersCount int = 5
 )
 
-func (b *CreateQuiz) Run(_ *tele.Bot, ctx tele.Context, _ []string) error {
+func (b *CreateQuiz) Run(ctx tele.Context, _ []string) error {
 	id := ctx.Callback().Sender.ID
 	languageCode := ctx.Callback().Sender.LanguageCode
 
@@ -40,7 +40,7 @@ func (b *CreateQuiz) Run(_ *tele.Bot, ctx tele.Context, _ []string) error {
 	return ctx.Send(i18n.Translatef(lang.QuizCreateStartMessage, languageCode))
 }
 
-func (b *CreateQuiz) createQuizCallback(_ *tele.Bot, ctx tele.Context) bool {
+func (b *CreateQuiz) createQuizCallback(ctx tele.Context) bool {
 	languageCode := ctx.Message().Sender.LanguageCode
 	id := ctx.Message().Sender.ID
 	quizName := ctx.Message().Text
@@ -67,7 +67,7 @@ func (b *CreateQuiz) createQuizCallback(_ *tele.Bot, ctx tele.Context) bool {
 }
 
 func createQuestionCallback(quizID int64) callback.CallbackFunc {
-	return func(_ *tele.Bot, ctx tele.Context) bool {
+	return func(ctx tele.Context) bool {
 		id := ctx.Message().Sender.ID
 		languageCode := ctx.Message().Sender.LanguageCode
 		question := ctx.Message().Text
@@ -106,10 +106,12 @@ func createQuestionCallback(quizID int64) callback.CallbackFunc {
 }
 
 func addAnswersToQuestionCallback(quizID, questionID int64) callback.CallbackFunc {
-	return func(_ *tele.Bot, ctx tele.Context) bool {
+	return func(ctx tele.Context) bool {
 		languageCode := ctx.Message().Sender.LanguageCode
 
-		answers := strings.Split(ctx.Message().Text, ";")
+		formattedAns := strings.Replace(ctx.Message().Text, "-", "–", -1)
+
+		answers := strings.Split(formattedAns, ";")
 
 		if len(answers) < minQuestionAnswersCount || len(answers) > maxQuestionAnswersCount {
 			_ = ctx.Reply(i18n.Translatef(lang.QuizQuestionAnswersCountInvalid, languageCode))

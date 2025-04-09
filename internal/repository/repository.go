@@ -235,7 +235,7 @@ func (repo *Repository) SelectUsersQuizProgressByQuizID(quizID int64) (progresse
 	return progresses, nil
 }
 
-func (repo *Repository) SelectQuizResultByQuizID(quizID int64) (results []repository_model.QuizResult, err error) {
+func (repo *Repository) GetQuizResultsByQuizID(quizID int64) (results []repository_model.QuizResult, err error) {
 	query := repository_query.SelectQuizResultByQuizID
 
 	if err := repo.db.Select(&results, query, quizID); err != nil {
@@ -330,4 +330,27 @@ func (repo *Repository) SaveNewQuizProgress(qp repository_model.QuizProgress) er
 	}
 
 	return new(datasource.DataSource).ExecSQL(repo.db.Exec(query, args...)).Scan(nil, nil)
+}
+
+func (repo *Repository) GetUsersByPersonalData(surname, name, patronymic string) (users []repository_model.User, err error) {
+	query := repository_query.SelectUsersBySurname
+
+	args := utils.Array{
+		surname,
+	}
+
+	if name != "" {
+		query += " and u.name = ?"
+		args = append(args, name)
+	}
+
+	if patronymic != "" {
+		query += " and u.patronymic = ?"
+		args = append(args, patronymic)
+	}
+
+	if err := repo.db.Select(&users, query, args...); err != nil {
+		return users, err
+	}
+	return users, nil
 }

@@ -14,7 +14,7 @@ type ListQuiz struct {
 	log *slog.Logger
 }
 
-func (b *ListQuiz) Run(_ *tele.Bot, ctx tele.Context, _ []string) error {
+func (b *ListQuiz) Run(ctx tele.Context, _ []string) error {
 	id := ctx.Callback().Sender.ID
 	languageCode := ctx.Callback().Sender.LanguageCode
 

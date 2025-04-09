@@ -15,7 +15,7 @@ type AddQuestionQuiz struct {
 	log *slog.Logger
 }
 
-func (b *AddQuestionQuiz) Run(_ *tele.Bot, ctx tele.Context, args []string) error {
+func (b *AddQuestionQuiz) Run(ctx tele.Context, args []string) error {
 	if len(args) != 1 {
 		return ErrInvalidUsage
 	}

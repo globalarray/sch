@@ -16,7 +16,7 @@ type SetRoleKey struct {
 	log *slog.Logger
 }
 
-func (b *SetRoleKey) Run(_ *tele.Bot, ctx tele.Context, args []string) error {
+func (b *SetRoleKey) Run(ctx tele.Context, args []string) error {
 	if len(args) < 1 {
 		return ErrInvalidUsage
 	}

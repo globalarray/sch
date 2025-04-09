@@ -12,6 +12,7 @@ import (
 	"math/rand"
 	"slices"
 	"strings"
+	"time"
 )
 
 type QuizService struct {
@@ -106,12 +107,26 @@ func (qs *QuizService) ProcessQuiz(ctx tele.Context, quizID, userID int64, langu
 
 	answers := strings.Split(question.Answers, ";")
 
-	rand.Shuffle(len(answers), func(i, j int) {
-		answers[i], answers[j] = answers[j], answers[i]
-	})
+	randAnswers := make([]string, len(answers))
 
-	for _, ans := range answers {
-		ansBtn := selector.Data(ans, fmt.Sprintf("question_answer-%d-%s", question.ID, ans))
+	copy(randAnswers, answers)
+
+	r := rand.New(rand.NewSource(time.Now().Unix()))
+
+	for n := len(randAnswers); n > 0; n-- {
+		randIndex := r.Intn(n)
+		// We swap the value at index n-1 and the random index
+		// to move our randomly chosen value to the end of the
+		// slice, and to move the value that was at n-1 into our
+		// unshuffled portion of the slice.
+		randAnswers[n-1], randAnswers[randIndex] = randAnswers[randIndex], randAnswers[n-1]
+	}
+
+	for _, ans := range randAnswers {
+		realIdx := slices.Index(answers, ans)
+
+		ansBtn := selector.Data(ans, fmt.Sprintf("question_answer-%d-%d", question.ID, realIdx))
+
 		if len(rows) == 0 {
 			rows = append(rows, selector.Row(ansBtn))
 			continue

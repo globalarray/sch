@@ -18,7 +18,7 @@ type RemoveQuestionQuiz struct {
 
 var errInvalidQuestionID = errors.New("invalid question id")
 
-func (b *RemoveQuestionQuiz) Run(_ *tele.Bot, ctx tele.Context, args []string) error {
+func (b *RemoveQuestionQuiz) Run(ctx tele.Context, args []string) error {
 	if len(args) != 1 {
 		return ErrInvalidUsage
 	}

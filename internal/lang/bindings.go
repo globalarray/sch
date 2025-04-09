@@ -14,7 +14,11 @@ const (
 
 	QuizCreateBtn                   string = "QuizCreateBtn"
 	QuizRemoveBtn                   string = "QuizRemoveBtn"
+	QuizStartBtn                    string = "QuizStartBtn"
+	QuizNotFound                    string = "QuizNotFound"
 	QuizListBtn                     string = "QuizListBtn"
+	QuizDetailBtn                   string = "QuizDetailBtn"
+	QuizStartMessage                string = "QuizStartMessage"
 	QuizCreateNameLengthInvalid     string = "QuizCreateNameLengthInvalid"
 	QuizCreatedMessage              string = "QuizCreatedMessage"
 	QuizQuestionNameLengthInvalid   string = "QuizQuestionNameLengthInvalid"
@@ -31,6 +35,14 @@ const (
 	QuizRemovedMessage              string = "QuizRemovedMessage"
 	QuizAlreadyCompleted            string = "QuizAlreadyCompleted"
 	QuizCompletedMessage            string = "QuizCompletedMessage"
+
+	QuizDetailResultTitle               string = "QuizDetailResultTitle"
+	QuizDetailResultNotFound            string = "QuizDetailResultNotFound"
+	QuizDetailResultDataNeededMessage   string = "QuizDetailResultDataNeededMessage"
+	QuizWithoutResultsError             string = "QuizWithoutResultsError"
+	QuizDetailResultIncorrectAnswerLine string = "QuizDetailResultIncorrectAnswerLine"
+	QuizDetailResultCorrectAnswerLine   string = "QuizDetailResultCorrectAnswerLine"
+	QuizDetailResultQuestionLine        string = "QuizDetailResultQuestionLine"
 
 	QuestionTitle string = "QuestionTitle"
 

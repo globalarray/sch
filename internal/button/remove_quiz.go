@@ -14,7 +14,7 @@ type RemoveQuiz struct {
 	log *slog.Logger
 }
 
-func (b *RemoveQuiz) Run(_ *tele.Bot, ctx tele.Context, args []string) error {
+func (b *RemoveQuiz) Run(ctx tele.Context, args []string) error {
 	if len(args) != 1 {
 		return ErrInvalidUsage
 	}

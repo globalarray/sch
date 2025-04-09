@@ -16,7 +16,7 @@ type CreateInvitationKey struct {
 	log *slog.Logger
 }
 
-func (b *CreateInvitationKey) Run(_ *tele.Bot, ctx tele.Context, _ []string) error {
+func (b *CreateInvitationKey) Run(ctx tele.Context, _ []string) error {
 	languageCode := ctx.Callback().Sender.LanguageCode
 	id := ctx.Callback().Sender.ID
 

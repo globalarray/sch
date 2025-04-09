@@ -77,4 +77,7 @@ var (
 
 	//go:embed quiz_result/delete_by_quiz_id.sql
 	DeleteResultsByQuizID string
+
+	//go:embed user/select_by_surname.sql
+	SelectUsersBySurname string
 )

@@ -5,7 +5,7 @@ import (
 	"sync"
 )
 
-type CallbackFunc func(b *tele.Bot, ctx tele.Context) bool
+type CallbackFunc func(ctx tele.Context) bool
 
 var (
 	callbacksMu sync.Mutex
@@ -27,11 +27,11 @@ func Exists(id int64) bool {
 	return callbacks[id] != nil
 }
 
-func Call(b *tele.Bot, ctx tele.Context) {
+func Call(ctx tele.Context) {
 	id := ctx.Message().Sender.ID
 
 	if fn, ok := callbacks[id]; ok {
-		if ok := fn(b, ctx); ok {
+		if ok := fn(ctx); ok {
 			delete(callbacks, id)
 		}
 	}

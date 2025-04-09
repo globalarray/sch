@@ -18,7 +18,7 @@ type GetInfoQuiz struct {
 	log *slog.Logger
 }
 
-func (b *GetInfoQuiz) Run(_ *tele.Bot, ctx tele.Context, args []string) error {
+func (b *GetInfoQuiz) Run(ctx tele.Context, args []string) error {
 	if len(args) != 1 {
 		return ErrInvalidUsage
 	}
@@ -53,7 +53,7 @@ func (b *GetInfoQuiz) Run(_ *tele.Bot, ctx tele.Context, args []string) error {
 		return err
 	}
 
-	results, err := repository.Repo().SelectQuizResultByQuizID(quizID)
+	results, err := repository.Repo().GetQuizResultsByQuizID(quizID)
 
 	if err != nil {
 		return err
@@ -66,7 +66,13 @@ func (b *GetInfoQuiz) Run(_ *tele.Bot, ctx tele.Context, args []string) error {
 	response = append(response, i18n.Translatef(lang.QuizInfoInvitationLinkLine, languageCode, encoded))
 	response = append(response, i18n.Translatef(lang.QuizInfoQuestionsCountLine, languageCode, len(questions)))
 
+	selector := &tele.ReplyMarkup{}
+
+	var rows []tele.Row
+
 	if len(results) > 0 {
+		rows = append(rows, selector.Row(selector.Data(i18n.Translatef(lang.QuizDetailBtn, languageCode), fmt.Sprintf("quiz_result_detail-%d", quizID))))
+
 		response = append(response, "\n")
 		response = append(response, i18n.Translatef(lang.QuizInfoCompletedUsersLine, languageCode, len(results)))
 
@@ -81,9 +87,9 @@ func (b *GetInfoQuiz) Run(_ *tele.Bot, ctx tele.Context, args []string) error {
 		}
 	}
 
-	selector := &tele.ReplyMarkup{}
+	rows = append(rows, selector.Row(selector.Data(i18n.Translatef(lang.QuizRemoveBtn, languageCode), fmt.Sprintf("quiz_remove-%d", quizID))))
 
-	selector.Inline(selector.Row(selector.Data(i18n.Translatef(lang.QuizRemoveBtn, languageCode), fmt.Sprintf("quiz_remove-%d", quizID))))
+	selector.Inline(rows...)
 
 	return ctx.Send(strings.Join(response, "\n"), selector)
 }

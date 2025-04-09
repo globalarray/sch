@@ -25,7 +25,7 @@ type FillPersonalData struct {
 	log *slog.Logger
 }
 
-func (b *FillPersonalData) Run(_ *tele.Bot, ctx tele.Context, args []string) error {
+func (b *FillPersonalData) Run(ctx tele.Context, args []string) error {
 	if len(args) < 1 {
 		return ErrInvalidUsage
 	}
@@ -47,7 +47,7 @@ func (b *FillPersonalData) Endpoint() string {
 }
 
 func fillPersonalDataKeyCallback(key string) callback.CallbackFunc {
-	return func(bot *tele.Bot, ctx tele.Context) bool {
+	return func(ctx tele.Context) bool {
 		languageCode := ctx.Message().Sender.LanguageCode
 		data := strings.Split(ctx.Message().Text, " ")
 
@@ -70,7 +70,7 @@ func fillPersonalDataKeyCallback(key string) callback.CallbackFunc {
 
 		selector.Inline(selector.Row(nextStageBtn, refillBtn))
 
-		_, _ = bot.Reply(ctx.Message(), i18n.Translatef(lang.InvitationKeyNameSaved, languageCode, data[0], data[1], data[2]), selector)
+		_ = ctx.Reply(i18n.Translatef(lang.InvitationKeyNameSaved, languageCode, data[0], data[1], data[2]), selector)
 
 		return true
 	}
